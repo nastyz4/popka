@@ -1,145 +1,62 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <title>Новогодний кроссворд</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-    h1 {
-      color: #d32f2f;
-      text-align: center;
-    }
-    .container {
-      display: flex;
-      gap: 30px;
-      margin-top: 20px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(15, 30px);
-      grid-template-rows: repeat(15, 30px);
-      gap: 1px;
-      background-color: #999;
-      padding: 5px;
-      border: 2px solid #333;
-    }
-    .cell {
-      width: 30px;
-      height: 30px;
-      background-color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      font-size: 16px;
-      position: relative;
-    }
-    .cell.number::before {
-      content: attr(data-num);
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      font-size: 9px;
-      color: red;
-      font-weight: bold;
-    }
-    .clues {
-      max-width: 350px;
-    }
-    .clues h2 {
-      color: #1976d2;
-      margin-bottom: 10px;
-    }
-    .clue {
-      margin: 6px 0;
-      font-size: 16px;
-    }
-    .clue-number {
-      font-weight: bold;
-      color: red;
-    }
-  </style>
-</head>
-<body>
-  <h1>🎄 Новогодний кроссворд 🎁</h1>
+                            if (next) next.focus();
+                        } else if (e.key === 'ArrowUp' && r > 0) {
+                            const prev = document.querySelector(`input[data-row="${r-1}"][data-col="${c}"]`);
+                            if (prev) prev.focus();
+                        }
+                    });
+                    cell.appendChild(input);
+                    inputs[r][c] = input;
 
-  <div class="container">
-    <div class="grid" id="crossword-grid"></div>
-
-    <div class="clues">
-      <h2>Подсказки:</h2>
-      <div class="clue"><span class="clue-number">1.</span> Главное новогоднее дерево</div>
-      <div class="clue"><span class="clue-number">2.</span> Сказочный старик с посохом и мешком</div>
-      <div class="clue"><span class="clue-number">3.</span> Белое покрывало зимы</div>
-      <div class="clue"><span class="clue-number">4.</span> Мигающие огоньки на ёлке</div>
-      <div class="clue"><span class="clue-number">5.</span> То, что ждут все под ёлкой</div>
-      <div class="clue"><span class="clue-number">6.</span> Праздничный фейерверк</div>
-      <div class="clue"><span class="clue-number">7.</span> Кружевная звезда с неба</div>
-      <div class="clue"><span class="clue-number">8.</span> То, во что верят в Новый год</div>
-      <div class="clue"><span class="clue-number">9.</span> Ароматные цитрусовые праздника</div>
-      <div class="clue"><span class="clue-number">10.</span> Атмосфера волшебных чудес</div>
-    </div>
-  </div>
-
-  <script>
-    // Слова (без пробелов, в верхнем регистре)
-    const words = [
-      { text: "ЕЛКА",        dir: 'hor', x: 4,  y: 1,  num: 1 },
-      { text: "ДЕДМОРОЗ",   dir: 'hor', x: 2,  y: 3,  num: 2 },
-      { text: "СНЕГ",        dir: 'ver', x: 6,  y: 0,  num: 3 },
-      { text: "ОГОНЬКИ",    dir: 'hor', x: 8,  y: 5,  num: 4 },
-      { text: "ПОДАРКИ",    dir: 'hor', x: 0,  y: 8,  num: 5 },
-      { text: "САЛЮТ",      dir: 'ver', x: 12, y: 2,  num: 6 },
-      { text: "СНЕЖИНКА",   dir: 'hor', x: 3,  y: 10, num: 7 },
-      { text: "ЧУДО",       dir: 'ver', x: 1,  y: 7,  num: 8 },
-      { text: "МАНДАРИНЫ",  dir: 'hor', x: 2,  y: 12, num: 9 },
-      { text: "ВОЛШЕБСТВО", dir: 'hor', x: 1,  y: 14, num:10 }
-    ];
-
-    const size = 15;
-    const grid = Array(size).fill().map(() => Array(size).fill(''));
-    const numbers = Array(size).fill().map(() => Array(size).fill(null));
-
-    // Заполняем сетку и проставляем номера
-    words.forEach(word => {
-      const { text, dir, x, y, num } = word;
-      if (!numbers[y][x]) {
-        numbers[y][x] = num;
-      }
-      for (let i = 0; i < text.length; i++) {
-        if (dir === 'hor') {
-          if (x + i < size) grid[y][x + i] = text[i];
-        } else if (dir === 'ver') {
-          if (y + i < size) grid[y + i][x] = text[i];
+                    // Номер подсказки
+                    if (/\d+/.test(val)) {
+                        const numSpan = document.createElement('span');
+                        numSpan.className = 'number';
+                        numSpan.textContent = val;
+                        cell.appendChild(numSpan);
+                    }
+                }
+                grid.appendChild(cell);
+            }
         }
-      }
-    });
 
-    // Рендерим сетку
-    const gridEl = document.getElementById('crossword-grid');
-    for (let row = 0; row < size; row++) {
-      for (let col = 0; col < size; col++) {
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        if (grid[row][col]) {
-          cell.textContent = grid[row][col];
-          if (numbers[row][col]) {
-            cell.classList.add('number');
-            cell.dataset.num = numbers[row][col];
-          }
-        } else {
-          cell.style.backgroundColor = '#e0e0e0';
+        function checkAnswers() {
+            let allCorrect = true;
+            let total = 0, correct = 0;
+
+            // Проверяем каждое слово
+            for (const [num, data] of Object.entries(answers)) {
+                const { word, dir, pos } = data;
+                const [r0, c0] = pos;
+                let matches = true;
+
+                for (let i = 0; i < word.length; i++) {
+                    const r = dir === 'ver' ? r0 + i : r0;
+                    const c = dir === 'hor' ? c0 + i : c0;
+                    const input = inputs[r][c];
+                    const letter = input?.value.trim().toUpperCase() || '';
+                    if (letter !== word[i]) {
+                        matches = false;
+                        input.style.backgroundColor = '#ffebee';
+                    } else {
+                        input.style.backgroundColor = '#e8f5e9';
+                    }
+                }
+
+                if (matches) correct++;
+                total++;
+                if (!matches) allCorrect = false;
+            }
+
+            const msgEl = document.getElementById('message');
+            if (allCorrect) {
+                msgEl.textContent = '🎉 Поздравляем! Кроссворд решён!';
+                msgEl.style.color = '#a5d6a7';
+            } else {
+                msgEl.textContent = `✅ ${correct} из ${total} слов верно. Исправьте ошибки.`;
+                msgEl.style.color = '#ffcc80';
+            }
         }
-        gridEl.appendChild(cell);
-      }
-    }
-  </script>
+    </script>
 </body>
 </html>
